@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skinclassifier/components/bottomnav.dart';
+import 'package:skinclassifier/pages/profile.dart';
 
 import 'history.dart';
 import 'home.dart';
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
     Home(),
 
     HistoryPage(),
+
+    ProfilePage(),
   ];
 
   @override

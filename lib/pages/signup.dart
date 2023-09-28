@@ -55,7 +55,7 @@ class _SignupPageState extends State<SignupPage> {
                 // username textfield
                 MyTextField(
                   controller: usernameController,
-                  hintText: 'Username',
+                  hintText: 'Email',
                   obscureText: false,
                 ),
 

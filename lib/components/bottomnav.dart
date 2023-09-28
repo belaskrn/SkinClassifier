@@ -26,6 +26,11 @@ class BottomNav extends StatelessWidget {
         GButton(
           icon: Icons.history,
           text: 'History',
+          ),
+
+        GButton(
+          icon: Icons.person,
+          text: 'Profile',
           )
     
       ]),
