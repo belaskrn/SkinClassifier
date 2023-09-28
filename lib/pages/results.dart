@@ -88,7 +88,7 @@ class ResultsPage extends StatelessWidget {
               Align(
                 alignment: Alignment.center, // Mengatur posisi teks ke tengah
                 child: Text(
-                  "This result is provided for informational purposes only. Consult a Doctor for Diagnosis",
+                  "This result is provided for informational purposes only. Consult to doctor for correct diagnosis",
                   textAlign: TextAlign.center, // Teks rata tengah secara horizontal
                   style: TextStyle(
                     color: Colors.red[700], // Warna teks peringatan

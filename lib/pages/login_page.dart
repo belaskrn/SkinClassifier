@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:skinclassifier/components/my_button.dart';
 import 'package:skinclassifier/components/my_textfield.dart';
 import 'package:skinclassifier/components/square_tile.dart';
+import 'package:skinclassifier/pages/signup.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function()? onTap;
-
-  LoginPage({Key? key, required this.onTap}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -159,7 +157,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,
+                      onTap: () {
+                        // Navigate to the SignupPage when "Register now" is tapped
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignupPage(),
+                        ));
+                      },
                       child: const Text(
                         'Register now',
                         style: TextStyle(
@@ -170,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 50),
               ],
             ),

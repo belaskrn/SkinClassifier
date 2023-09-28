@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "395221273356",
+    "project_id": "papb-cfc91",
+    "storage_bucket": "papb-cfc91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395221273356:android:b7aede7504da6546cb5729",
+        "android_client_info": {
+          "package_name": "com.example.papb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNz0iruThAy5ANDMQPuvSLVkUdMXru07k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:skinclassifier/components/my_button.dart';
 import 'package:skinclassifier/components/my_textfield.dart';
 import 'package:skinclassifier/components/square_tile.dart';
-import 'homepage.dart';
+import 'package:skinclassifier/pages/login_page.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
+class SignupPage extends StatefulWidget {
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
 
+class _SignupPageState extends State<SignupPage> {
   // text editing controllers
   final usernameController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserUp() {}
+  void signUserIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class SignupPage extends StatelessWidget {
 
                 // welcome back, you've been missed!
                 Text(
-                  'Create an account',
+                  "Create an account",
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 14,
@@ -73,19 +77,20 @@ class SignupPage extends StatelessWidget {
                   obscureText: true,
                 ),
 
+
+
                 const SizedBox(height: 25),
 
-                // sign up button
+                // sign in button
                 MyButton(
                   onTap: () {
                     // Navigate to the homepage when the button is clicked
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
                 ),
-
 
                 const SizedBox(height: 50),
 
@@ -135,24 +140,33 @@ class SignupPage extends StatelessWidget {
 
                 const SizedBox(height: 50),
 
-                // not a member? register now
+                // Already
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account?',
+                      'Already a member?',
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     const SizedBox(width: 4),
-                    const Text(
-                      'Login now',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        // Navigate to the SignupPage when "Register now" is tapped
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
+                      },
+                      child: const Text(
+                        'Login now',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 50),
               ],
             ),
