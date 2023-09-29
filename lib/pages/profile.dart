@@ -15,13 +15,13 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           children: [
             const SizedBox(height: 50),
-            Icon(
+            const Icon(
               Icons.person,
               size: 72,
               color: Color.fromARGB(255, 250, 239, 228),
             ),
             const SizedBox(height: 10),
-            Text(
+            const Text(
               'Your Profile',
               textAlign: TextAlign.center,
             ),
@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               decoration: BoxDecoration(
                   border: Border.all(
-                  color: Color.fromARGB(255, 250, 239, 228),
+                  color: const Color.fromARGB(255, 250, 239, 228),
                 ),
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
@@ -58,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
 
-                  Text('user@gmail.com'),
+                  const Text('user@gmail.com'),
 
                 ],
               ),

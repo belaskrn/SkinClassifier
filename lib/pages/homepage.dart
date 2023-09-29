@@ -22,9 +22,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Widget> _pages = [
-    Home(),
+    const Home(),
 
-    HistoryPage(),
+    const HistoryPage(),
 
     ProfilePage(),
   ];

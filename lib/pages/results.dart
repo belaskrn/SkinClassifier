@@ -11,7 +11,7 @@ class ResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: "Your Result",
         ),
       body: SingleChildScrollView(
@@ -33,16 +33,16 @@ class ResultsPage extends StatelessWidget {
                 ),
               ),
       
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
       
       
               Text(
                 image.diseaseName,
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold,),
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold,),
                 
               ),
       
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
       
               Text(
                 image.dateTaken,
@@ -51,21 +51,21 @@ class ResultsPage extends StatelessWidget {
                   color: Colors.grey[700]),
               ),
       
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
       
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Confidence Score:',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 8), // Spasi antara teks "Confidence Score:" dan teks skor aktual
+                  const SizedBox(width: 8), // Spasi antara teks "Confidence Score:" dan teks skor aktual
                   Text(
                     image.confidenceScore,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
@@ -73,17 +73,17 @@ class ResultsPage extends StatelessWidget {
               ),
       
       
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
       
               Text(
                 image.description,
                 textAlign: TextAlign.justify,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   ),
               ),
       
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
       
               Align(
                 alignment: Alignment.center, // Mengatur posisi teks ke tengah

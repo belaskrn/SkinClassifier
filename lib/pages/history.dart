@@ -21,7 +21,7 @@ class _HistoryPageState extends State<HistoryPage> {
           padding: const EdgeInsets.all(25.0),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Classified Images',
                 style: TextStyle(
                   fontSize: 16,
@@ -38,13 +38,13 @@ class _HistoryPageState extends State<HistoryPage> {
                     return Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color.fromARGB(
+                            color: const Color.fromARGB(
                                 255, 250, 239, 228), // Warna border
                           ),
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12)),
-                      margin: EdgeInsets.only(bottom: 10),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                       child: ListTile(
                         title: Text(eachImage.diseaseName),
                         subtitle: Text(eachImage.dateTaken),
