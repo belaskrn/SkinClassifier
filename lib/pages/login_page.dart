@@ -1,24 +1,94 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skinclassifier/components/my_button.dart';
 import 'package:skinclassifier/components/my_textfield.dart';
 import 'package:skinclassifier/components/square_tile.dart';
 import 'package:skinclassifier/pages/signup.dart';
-import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
-  final usernameController = TextEditingController();
-
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {}
+  void signUserIn() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    // try sign in
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+    if (!mounted) return;
+    // pop the loading circle
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // pop the loading circle
+      Navigator.pop(context);
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        // show error to user
+        wrongEmailMessage();
+      }
+
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        // show error to user
+        wrongPasswordMessage();
+      }
+    }
+  }
+
+  // wrong email message popup
+  void wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+            child: Text(
+              'Incorrect Email',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // wrong password message popup
+  void wrongPasswordMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+            child: Text(
+              'Incorrect Password',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 // username textfield
                 MyTextField(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
@@ -90,13 +160,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 // sign in button
                 MyButton(
-                  onTap: () {
-                    // Navigate to the homepage when the button is clicked
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
-                  },
+                  onTap: signUserIn,
                 ),
 
                 const SizedBox(height: 50),

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,15 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDxWnSNwvRJbOwRL9o7VCRSj30en72ZFhk',
+    appId: '1:395221273356:web:e1bfd0d096cae71ecb5729',
+    messagingSenderId: '395221273356',
+    projectId: 'papb-cfc91',
+    authDomain: 'papb-cfc91.firebaseapp.com',
+    storageBucket: 'papb-cfc91.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCNz0iruThAy5ANDMQPuvSLVkUdMXru07k',
     appId: '1:395221273356:android:b7aede7504da6546cb5729',
@@ -64,5 +67,14 @@ class DefaultFirebaseOptions {
     projectId: 'papb-cfc91',
     storageBucket: 'papb-cfc91.appspot.com',
     iosBundleId: 'com.example.papb',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBwHjI0T9GM1bdOGqBfPHqnVLFIO_KmWbo',
+    appId: '1:395221273356:ios:0446abd8c2c59d04cb5729',
+    messagingSenderId: '395221273356',
+    projectId: 'papb-cfc91',
+    storageBucket: 'papb-cfc91.appspot.com',
+    iosBundleId: 'com.example.papb.RunnerTests',
   );
 }
