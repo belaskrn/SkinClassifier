@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:skinclassifier/pages/results.dart';
+import 'package:tflite/tflite.dart';
 // import 'package:skinclassifier/pages/results.dart';
 
 class Home extends StatefulWidget {
@@ -13,6 +13,40 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   File? image;
+  late File _image;
+  late List _results;
+  bool imageSelect=false;
+
+  @override
+  void initState()
+  {
+    super.initState();
+    loadModel();
+  }
+
+  Future loadModel()
+  async {
+    Tflite.close();
+    String res;
+    res=(await Tflite.loadModel(model: "assets/scmodel.tflite",labels: "assets/labels.txt"))!;
+    print("Models loading status: $res");
+  }
+
+  Future imageClassification(File image)
+  async {
+    final List? recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 6,
+      threshold: 0.05,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      _results=recognitions!;
+      _image=image;
+      imageSelect=true;
+    });
+  }
 
   Future getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -166,7 +200,13 @@ class _HomeState extends State<Home> {
                           fontSize: 16,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (image != null) {
+                          await imageClassification(image!);
+                        } else {
+                          // Handle the case where no image is selected
+                        }
+                      },
                     ),
                   ),
                 ],

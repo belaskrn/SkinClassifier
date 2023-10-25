@@ -1,22 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skinclassifier/components/my_button.dart';
 import 'package:skinclassifier/components/my_textfield.dart';
 import 'package:skinclassifier/components/square_tile.dart';
-import 'package:skinclassifier/pages/login_page.dart';
+import 'package:skinclassifier/services/auth_service.dart';
 
 class SignupPage extends StatefulWidget {
+  final Function()? onTap;
+  SignupPage({required this.onTap, Key? key}) : super(key: key);
+
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> {
   // text editing controllers
-  final usernameController = TextEditingController();
-
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {}
+  void signUserIn() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    // try sign in
+    try {
+      if (passwordController.text != confirmPasswordController.text) {
+        // Passwords do not match, display an error message
+        Navigator.pop(context);
+        errorMessage("Passwords do not match");
+      } else {
+        // Create a new user with email and password
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // Successful registration
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      // Handle other exceptions (if needed)
+      Navigator.pop(context);
+      errorMessage(e.toString());
+    }
+  }
+
+ // error message
+  void errorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 250, 239, 228),
+          title: Center(
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 42, 42, 42), 
+                fontSize: 16),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +99,7 @@ class _SignupPageState extends State<SignupPage> {
 
                 // welcome back, you've been missed!
                 Text(
-                  "Create an account",
+                  "Let's create an account for you",
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 14,
@@ -54,7 +110,7 @@ class _SignupPageState extends State<SignupPage> {
 
                 // username textfield
                 MyTextField(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
@@ -70,26 +126,19 @@ class _SignupPageState extends State<SignupPage> {
 
                 const SizedBox(height: 10),
 
-                // confirm password textfield
+                // password textfield
                 MyTextField(
-                  controller: passwordController,
+                  controller: confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
-
-
 
                 const SizedBox(height: 25),
 
                 // sign in button
                 MyButton(
-                  onTap: () {
-                    // Navigate to the homepage when the button is clicked
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  },
+                  text: "Sign Up",
+                  onTap: signUserIn,
                 ),
 
                 const SizedBox(height: 50),
@@ -125,18 +174,19 @@ class _SignupPageState extends State<SignupPage> {
                 const SizedBox(height: 50),
 
                 // google + apple sign in buttons
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
+                    SquareTile(
+                      onTap: () => AuthService().signInWithGoogle(),
+                      imagePath: 'lib/images/google.png'),
                   ],
                 ),
 
                 const SizedBox(height: 50),
 
-                // Already
+                // not a member? register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -146,12 +196,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: () {
-                        // Navigate to the SignupPage when "Register now" is tapped
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ));
-                      },
+                      onTap: widget.onTap,
                       child: const Text(
                         'Login now',
                         style: TextStyle(
