@@ -1,6 +1,6 @@
-# papb
+# Skin Classifier - PAPB Project
 
-A new Flutter project.
+Flutter project for skin image classification
 
 ## Getting Started
 
