@@ -19,6 +19,9 @@ dependencies:
   firebase_auth: ^4.2.0
   google_sign_in: ^5.4.2
   tflite: ^1.1.2
+  meta: ^1.9.1
+  cloud_firestore: ^4.13.0
+  firebase_storage: ^11.5.0
 
 dev_dependencies:
   flutter_test:
@@ -45,3 +48,5 @@ flutter:
   assets:
   - assets/
   - lib/images/
+  - assets/labels.txt
+  - assets/model_unquant.tflite

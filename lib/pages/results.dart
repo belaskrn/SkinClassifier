@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:skinclassifier/models/skinimage.dart';
-
 import '../components/customappbar.dart';
 
 class ResultsPage extends StatelessWidget {
@@ -22,12 +21,12 @@ class ResultsPage extends StatelessWidget {
             children: [
       
               Container(
-                width: MediaQuery.of(context).size.width, // Menggunakan lebar layar saat ini
-                height: 200, // Sesuaikan tinggi sesuai kebutuhan Anda
+                width: MediaQuery.of(context).size.width, 
+                height: 200, 
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), // Menambahkan border radius
+                  borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
-                    image: AssetImage(image.imagePath),
+                    image: NetworkImage(image.imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -62,7 +61,9 @@ class ResultsPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 8), // Spasi antara teks "Confidence Score:" dan teks skor aktual
+
+                  const SizedBox(width: 8),
+
                   Text(
                     image.confidenceScore,
                     style: const TextStyle(
@@ -86,13 +87,13 @@ class ResultsPage extends StatelessWidget {
               const SizedBox(height: 50),
       
               Align(
-                alignment: Alignment.center, // Mengatur posisi teks ke tengah
+                alignment: Alignment.center, 
                 child: Text(
                   "This result is provided for informational purposes only. Consult to doctor for correct diagnosis",
-                  textAlign: TextAlign.center, // Teks rata tengah secara horizontal
+                  textAlign: TextAlign.center, 
                   style: TextStyle(
-                    color: Colors.red[700], // Warna teks peringatan
-                    fontStyle: FontStyle.italic, // Gaya teks miring
+                    color: Colors.red[700], 
+                    fontStyle: FontStyle.italic, 
                     fontSize: 14,
                   ),
                 ),

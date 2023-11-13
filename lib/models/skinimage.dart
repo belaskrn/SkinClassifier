@@ -12,4 +12,13 @@ class SkinImage {
     required this.confidenceScore,
     required this.description,
   });
+
+  // Named constructor for creating a SkinImage from Firestore data
+  SkinImage.fromFirestore(Map<String, dynamic> data)
+      : diseaseName = data['diseasename'],
+        imagePath = data['image_path'],
+        dateTaken = data['datetaken'],
+        confidenceScore = data['score'],
+        description = data['description'];
 }
+

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
-// import 'package:skinclassifier/pages/results.dart';
+import 'package:flutter/material.dart';
+import 'package:skinclassifier/models/skinimage.dart';
+import 'package:skinclassifier/models/viewmodel.dart';
+import 'package:skinclassifier/pages/results.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,60 +12,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  File? image;
-  late File _image;
-  late List _results;
-  bool imageSelect=false;
+  late ImageClassificationViewModel imageClassificationViewModel;
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    loadModel();
-  }
-
-  Future loadModel()
-  async {
-    Tflite.close();
-    String res;
-    res=(await Tflite.loadModel(model: "assets/scmodel.tflite",labels: "assets/labels.txt"))!;
-    print("Models loading status: $res");
-  }
-
-  Future imageClassification(File image)
-  async {
-    final List? recognitions = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 6,
-      threshold: 0.05,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-    setState(() {
-      _results=recognitions!;
-      _image=image;
-      imageSelect=true;
-    });
-  }
-
-  Future getImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? imagePicked =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (imagePicked != null) {
-      image = File(imagePicked.path);
-      setState(() {});
-    }
-  }
-
-  Future takeImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? imagePicked =
-        await picker.pickImage(source: ImageSource.camera);
-    if (imagePicked != null) {
-      image = File(imagePicked.path);
-      setState(() {});
-    }
+    // Initialize the view model
+    imageClassificationViewModel = ImageClassificationViewModel();
+    // Load the model
+    imageClassificationViewModel.loadModel();
   }
 
   @override
@@ -111,13 +66,10 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 50),
               Center(
                 child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Center horizontally
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal:
-                              12), // Add horizontal margin between buttons
+                      margin: const EdgeInsets.symmetric(horizontal: 12),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -130,14 +82,13 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         onPressed: () async {
-                          await getImage();
+                          await imageClassificationViewModel.openGallery();
+                          setState(() {}); // Rebuild the widget
                         },
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal:
-                              12), // Add horizontal margin between buttons
+                      margin: const EdgeInsets.symmetric(horizontal: 12),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -150,25 +101,35 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         onPressed: () async {
-                          await takeImage();
+                          await imageClassificationViewModel.openCamera();
+                          setState(() {}); // Rebuild the widget
                         },
                       ),
                     ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 50),
-              image != null
-                  ? Container(
-                      height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.file(image!))
+
+              imageClassificationViewModel.image != null
+                  ? Center(
+                    child: Container(
+                        height: 250,
+                        width: 250,
+                        child: Image.file(
+                          File(imageClassificationViewModel.image!.path),
+                          height: 250,
+                          width: 250,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                  )
                   : Center(
                       child: Container(
                         height: 250,
                         width: 250,
-                        color: const Color.fromARGB(255, 250, 239,
-                            228), // Replace with your desired background color
+                        color: const Color.fromARGB(255, 250, 239, 228),
                         child: Center(
                           child: Text(
                             'No Image Selected',
@@ -180,15 +141,14 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
+
               const SizedBox(height: 50),
+              
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center horizontally
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal:
-                            12), // Add horizontal margin between buttons
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
                     child: MaterialButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
@@ -201,16 +161,38 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       onPressed: () async {
-                        if (image != null) {
-                          await imageClassification(image!);
-                        } else {
-                          // Handle the case where no image is selected
+                        if (imageClassificationViewModel.image != null) {
+                          // Classify the image
+                          await imageClassificationViewModel.classifyImage(imageClassificationViewModel.image!);
+
+                          // Save image and classification to Firestore
+                          final downloadURL = await imageClassificationViewModel.uploadImageToFirestore(
+                            imageClassificationViewModel.image!,
+                            imageClassificationViewModel.outputs![0]["label"],
+                            imageClassificationViewModel.outputs![0]["confidence"],
+                          );
+
+                          // Navigate to ResultsPage with the classified image
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ResultsPage(image: SkinImage(
+                                imagePath: downloadURL, // Use the download URL instead of local path
+                                diseaseName: imageClassificationViewModel.outputs![0]["label"],
+                                dateTaken: DateTime.now().toString(),
+                                confidenceScore: imageClassificationViewModel.outputs![0]["confidence"].toStringAsFixed(2),
+                                description: "Your description here",
+                              )),
+                            ),
+                          );
                         }
-                      },
+                      }, // <--- Add this closing parenthesis
                     ),
                   ),
                 ],
               ),
+
+                    
             ],
           ),
         ),

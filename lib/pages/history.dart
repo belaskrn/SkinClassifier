@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skinclassifier/models/skinimage.dart';
 import 'package:skinclassifier/models/skinimage_list.dart';
 import 'package:skinclassifier/pages/results.dart';
 // import 'package:skinclassifier/pages/results.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  final CollectionReference images = FirebaseFirestore.instance.collection('SkinImages');
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ImageList>(
@@ -30,40 +34,71 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               const SizedBox(height: 25),
               Expanded(
-                child: ListView.builder(
-                  itemCount: value.imageList.length,
-                  itemBuilder: (context, index) {
-                    SkinImage eachImage = value.imageList[index];
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: images
+                  .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid) // Replace 'your_user_id' with the actual user ID
+                  .orderBy('datetaken', descending: true)
+                  .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('Error retrieving images');
+                    }
 
-                    return Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(
-                                255, 250, 239, 228), // Warna border
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12)),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      child: ListTile(
-                        title: Text(eachImage.diseaseName),
-                        subtitle: Text(eachImage.dateTaken),
-                        leading: Image.asset(
-                          eachImage.imagePath,
-                          width: 60, // Sesuaikan dengan lebar Container
-                          height: 60, // Sesuaikan dengan tinggi Container
-                          fit: BoxFit.cover,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ResultsPage(image: eachImage),
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    List<SkinImage> firestoreImages = snapshot.data!.docs.map((DocumentSnapshot doc) {
+                      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                      return SkinImage(
+                        diseaseName: data['diseasename'] ?? '',
+                        imagePath: data['image_path'] ?? '',
+                        dateTaken: data['datetaken'] != null
+                            ? DateTime.fromMillisecondsSinceEpoch(data['datetaken'].millisecondsSinceEpoch).toString()
+                            : '',
+                        confidenceScore: data['score'] != null ? '${((data['score'] as double) * 100).roundToDouble().toStringAsFixed(0)}%' : '',
+
+                        description: '',
+                      );
+                    }).toList();
+
+                    return ListView.builder(
+                      itemCount: firestoreImages.length,
+                      itemBuilder: (context, index) {
+                        SkinImage eachImage = firestoreImages[index];
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 250, 239, 228),
                             ),
-                          );
-                        },
-                      ),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                          child: ListTile(
+                            title: Text(eachImage.diseaseName),
+                            subtitle: Text(eachImage.dateTaken),
+                            leading: Container(
+                              width: 60,
+                              height: 60,
+                              child: Image.network(
+                                eachImage.imagePath,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResultsPage(image: eachImage),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

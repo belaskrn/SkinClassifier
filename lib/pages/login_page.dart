@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 250, 239, 228),
+          backgroundColor: const Color.fromARGB(255, 250, 239, 228),
           title: Center(
             child: Text(
               message,
