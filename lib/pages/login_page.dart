@@ -36,24 +36,12 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-
-      if (!mounted) return;
+      // pop the loading circle
+      } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // pop the loading circle
-      Navigator.pop(context);
-      // WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        // show error to user
-        errorMessage(e.code);
-      }
-
-      // WRONG PASSWORD
-      else if (e.code == 'wrong-password') {
-        // show error to user
-        errorMessage(e.code);
-      }
+      // show error message
+      errorMessage(e.code);
     }
   }
 
@@ -68,14 +56,16 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               message,
               style: const TextStyle(
-                color: Color.fromARGB(255, 42, 42, 42), 
-                fontSize: 16),
+                color: Color.fromARGB(255, 42, 42, 42),
+                fontSize: 16,
+              ),
             ),
           ),
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

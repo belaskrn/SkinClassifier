@@ -1,5 +1,5 @@
 0 Acne
 1 Rosacea
-2 Atopic Dermatitis
-3 Eczema
-4 Melanoma Skin Cancer
+2 Eczema
+3 Psoriasis
+4 Vitiligo

@@ -20,7 +20,7 @@ class _SignupPageState extends State<SignupPage> {
   final confirmPasswordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() async {
+  void signUserUp() async {
     // show loading circle
     showDialog(
       context: context,
@@ -138,7 +138,7 @@ class _SignupPageState extends State<SignupPage> {
                 // sign in button
                 MyButton(
                   text: "Sign Up",
-                  onTap: signUserIn,
+                  onTap: signUserUp,
                 ),
 
                 const SizedBox(height: 50),

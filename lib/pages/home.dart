@@ -188,7 +188,7 @@ class _HomeState extends State<Home> {
                                 imagePath: downloadURL,
                                 diseaseName: imageClassificationViewModel.outputs![0]["label"],
                                 dateTaken: DateTime.now().toString(),
-                                confidenceScore: imageClassificationViewModel.outputs![0]["confidence"],
+                                confidenceScore: imageClassificationViewModel.outputs![0]["confidence"].toStringAsFixed(2),
                               )),
                             ),
                           );
