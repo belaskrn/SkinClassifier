@@ -32,7 +32,9 @@ class _HistoryPageState extends State<HistoryPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               const SizedBox(height: 25),
+
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: images
@@ -45,7 +47,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
 
                     List<SkinImage> firestoreImages = snapshot.data!.docs.map((DocumentSnapshot doc) {
@@ -57,8 +61,6 @@ class _HistoryPageState extends State<HistoryPage> {
                             ? DateTime.fromMillisecondsSinceEpoch(data['datetaken'].millisecondsSinceEpoch).toString()
                             : '',
                         confidenceScore: data['score'] != null ? '${((data['score'] as double) * 100).roundToDouble().toStringAsFixed(0)}%' : '',
-
-                        description: '',
                       );
                     }).toList();
 
@@ -75,10 +77,11 @@ class _HistoryPageState extends State<HistoryPage> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
+
                           margin: const EdgeInsets.only(bottom: 10),
                           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           child: ListTile(
-                            title: Text(eachImage.diseaseName),
+                            title: Text(eachImage.diseaseName.split(' ').sublist(1).join(' ')),
                             subtitle: Text(eachImage.dateTaken),
                             leading: Container(
                               width: 60,
@@ -88,6 +91,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
+                            
                             onTap: () {
                               Navigator.push(
                                 context,

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
@@ -47,7 +46,6 @@ class ImageClassificationViewModel with ChangeNotifier {
     var image = await _picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
-      // Hanya tetapkan gambar yang dipilih ke _image
       _image = image;
       notifyListeners();
     }
@@ -57,7 +55,6 @@ class ImageClassificationViewModel with ChangeNotifier {
     var picture = await _picker.pickImage(source: ImageSource.gallery);
 
     if (picture != null) {
-      // Hanya tetapkan gambar yang dipilih ke _image
       _image = picture;
       notifyListeners();
     }
@@ -67,33 +64,20 @@ Future<String> uploadImageToFirestore(XFile image, String label, double confiden
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  // Generate a unique filename based on the current timestamp
   String fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.jpg';
-
-  // Create a reference to the file path in Cloud Storage
   final imageRef = _storage.ref().child('images/$fileName');
-
-  // Create a File object from the XFile
   final File imageFile = File(image.path);
-
-  // Upload the file to Cloud Storage
   await imageRef.putFile(imageFile);
-
-  // Get the download URL for the uploaded file
   final String downloadURL = await imageRef.getDownloadURL();
 
-  // Store data in Firestore
   await _images.add({
-    'userId': user!.uid, // Include the user ID
+    'userId': user!.uid,
     'diseasename': label,
     'image_path': downloadURL,
     'datetaken': FieldValue.serverTimestamp(),
     'score': confidence,
   });
 
-  print('File uploaded and Firestore document created.');
-
-  // Return the download URL
   return downloadURL;
 }
 

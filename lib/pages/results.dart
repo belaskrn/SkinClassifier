@@ -13,6 +13,7 @@ class ResultsPage extends StatelessWidget {
       appBar: const CustomAppBar(
         title: "Your Result",
         ),
+        
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
@@ -36,7 +37,7 @@ class ResultsPage extends StatelessWidget {
       
       
               Text(
-                image.diseaseName,
+                image.diseaseName.split(' ').sublist(1).join(' '),
                 style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold,),
                 
               ),
@@ -50,7 +51,7 @@ class ResultsPage extends StatelessWidget {
                   color: Colors.grey[700]),
               ),
       
-              const SizedBox(height: 5),
+              const SizedBox(height: 16),
       
               Row(
                 children: [
@@ -72,7 +73,6 @@ class ResultsPage extends StatelessWidget {
                   ),
                 ],
               ),
-      
       
               const SizedBox(height: 16),
       
@@ -98,22 +98,6 @@ class ResultsPage extends StatelessWidget {
                   ),
                 ),
               )
-      
-      
-      
-              // Text.rich(
-              //   TextSpan(
-              //     style: TextStyle(),
-              //     children: [
-              //       WidgetSpan(
-              //         alignment: PlaceholderAlignment.middle,
-              //         child: SizedBox(width: 40.0),
-              //       ),
-              //       TextSpan(text: image.description),
-              //     ],
-              //   ),
-              // )
-      
             ],
           ),
         ),

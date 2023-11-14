@@ -42,7 +42,9 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 4),
+
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Text(
@@ -53,7 +55,9 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 4),
+
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Text(
@@ -63,7 +67,9 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 50),
+
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -81,12 +87,14 @@ class _HomeState extends State<Home> {
                             fontSize: 16,
                           ),
                         ),
+
                         onPressed: () async {
                           await imageClassificationViewModel.openGallery();
                           setState(() {}); // Rebuild the widget
                         },
                       ),
                     ),
+
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 12),
                       child: MaterialButton(
@@ -100,6 +108,7 @@ class _HomeState extends State<Home> {
                             fontSize: 16,
                           ),
                         ),
+
                         onPressed: () async {
                           await imageClassificationViewModel.openCamera();
                           setState(() {}); // Rebuild the widget
@@ -125,6 +134,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                   )
+
                   : Center(
                       child: Container(
                         height: 250,
@@ -160,39 +170,35 @@ class _HomeState extends State<Home> {
                           fontSize: 16,
                         ),
                       ),
+
                       onPressed: () async {
                         if (imageClassificationViewModel.image != null) {
-                          // Classify the image
                           await imageClassificationViewModel.classifyImage(imageClassificationViewModel.image!);
 
-                          // Save image and classification to Firestore
                           final downloadURL = await imageClassificationViewModel.uploadImageToFirestore(
                             imageClassificationViewModel.image!,
                             imageClassificationViewModel.outputs![0]["label"],
                             imageClassificationViewModel.outputs![0]["confidence"],
                           );
 
-                          // Navigate to ResultsPage with the classified image
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ResultsPage(image: SkinImage(
-                                imagePath: downloadURL, // Use the download URL instead of local path
+                                imagePath: downloadURL,
                                 diseaseName: imageClassificationViewModel.outputs![0]["label"],
                                 dateTaken: DateTime.now().toString(),
-                                confidenceScore: imageClassificationViewModel.outputs![0]["confidence"].toStringAsFixed(2),
-                                description: "Your description here",
+                                confidenceScore: imageClassificationViewModel.outputs![0]["confidence"],
                               )),
                             ),
                           );
                         }
-                      }, // <--- Add this closing parenthesis
+                      }, 
                     ),
                   ),
                 ],
               ),
 
-                    
             ],
           ),
         ),
